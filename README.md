@@ -1,1 +1,2 @@
-# ModMenus_Back-end
+ModMenus-Digital Menu Cards
+Easy to implement, easy to access
