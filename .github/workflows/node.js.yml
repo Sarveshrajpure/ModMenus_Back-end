@@ -21,19 +21,17 @@ jobs:
              
     steps:
          - uses: actions/checkout@v2
-         - name: Make envfile
-           uses: SpicyPizza/create-envfile@v1.3
-           with:
-            envkey_DEBUG: false
-            envkey_DB_HOST: ${{secrets.DB_HOST}}
-            envkey_DB_PASS: ${{secrets.DB_PASS}}
-            envkey_DB_ADMIN: ${{secrets.DB_ADMIN}}
-            envkey_DB_SECRET: ${{secrets.DB_SECRET}}
-            envkey_EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
-            envkey_EMAIL: ${{secrets.EMAIL}}
-            envkey_EMAIL_MAIL_URL: ${{secrets.EMAIL_MAIL_URL}}
-            file_name: .env
-            fail_on_empty: false
+         - name: Create env file
+         - run: |
+            touch .env
+              echo DB_HOST=${{secrets.DB_HOST}} >> .env
+              echo DB_PASS= ${{secrets.DB_PASS}} >> .env
+              echo DB_ADMIN= ${{secrets.DB_ADMIN}} >> .env
+              echo DB_SECRET= ${{secrets.DB_SECRET}} >> .env
+              echo EMAIL_PASSWORD= ${{secrets.EMAIL_PASSWORD}} >> .env
+              echo EMAIL= ${{secrets.EMAIL}} >> .env
+              echo EMAIL_MAIL_URL= ${{secrets.EMAIL_MAIL_URL}} >> .env
+              cat .env
          - name: Use Node.js ${{ matrix.node-version }}
            uses: actions/setup-node@v2
            with:
