@@ -20,17 +20,20 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+    - name: Create env file
+      run: |
+          touch .env
+          echo DB_HOST: ${{secrets.DB_HOST}} >> .env
+          echo DB_PASS: ${{secrets.DB_PASS}} >> .env
+          echo DB_ADMIN: ${{secrets.DB_ADMIN}} >> .env
+          echo DB_PASS: ${{secrets.DB_PASS}} >> .env
+          echo DB_SECRET: ${{secrets.DB_SECRET}} >> .env
+          echo EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}} >> .env
+          echo EMAIL: ${{secrets.EMAIL}} >> .env
+          echo EMAIL_MAIL_URL: ${{secrets.EMAIL_MAIL_URL}} >> .env
+          cat .env
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
-      env:
-       DB_HOST: ${{secrets.DB_HOST}}
-       DB_PASS: ${{secrets.DB_PASS}}
-       DB_ADMIN: ${{secrets.DB_ADMIN}}
-       DB_SECRET: ${{secrets.DB_SECRET}}
-       EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
-       EMAIL: ${{secrets.EMAIL}}
-       EMAIL_MAIL_URL: ${{secrets.EMAIL_MAIL_URL}}
-    
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
