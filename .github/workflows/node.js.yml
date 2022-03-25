@@ -36,7 +36,7 @@ jobs:
               echo EMAIL_PASSWORD= ${{secrets.EMAIL_PASSWORD}} >> .env
               echo EMAIL= ${{secrets.EMAIL}} >> .env
               echo EMAIL_MAIL_URL= ${{secrets.EMAIL_MAIL_URL}} >> .env
-              cat .env
+               cat .env
          - run: pm2 restart ModMenus_back-end         
 
 
