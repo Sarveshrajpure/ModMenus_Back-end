@@ -18,20 +18,28 @@ jobs:
       matrix:
         node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+             
     steps:
-        - uses: actions/checkout@v2
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v2
-          with:
-           node-version: ${{ matrix.node-version }}
-           cache: 'npm'
-        - name: Create Env file
-        - run: |
-            touch .env
-            echo DB_HOST: ${{secrets.DB_HOST}} >> .env
-            echo  DB_SECRET: ${{secrets.DB_SECRET}} >> .env
-            cat .env
-           
-        - run: npm i
-        - run: pm2 restart ModMenus_back-end 
+         - uses: actions/checkout@v2
+         - name: Make envfile
+           uses: SpicyPizza/create-envfile@v1.3
+           with:
+            envkey_DEBUG: false
+            envkey_DB_HOST: ${{secrets.DB_HOST}}
+            envkey_DB_PASS: ${{secrets.DB_PASS}}
+            envkey_DB_ADMIN: ${{secrets.DB_ADMIN}}
+            envkey_DB_SECRET: ${{secrets.DB_SECRET}}
+            envkey_EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
+            envkey_EMAIL: ${{secrets.EMAIL}}
+            envkey_EMAIL_MAIL_URL: ${{secrets.EMAIL_MAIL_URL}}
+            file_name: .env
+            fail_on_empty: false
+         - name: Use Node.js ${{ matrix.node-version }}
+           uses: actions/setup-node@v2
+           with:
+            node-version: ${{ matrix.node-version }}
+            cache: 'npm'     
+         - run: npm i
+         - run: pm2 restart ModMenus_back-end         
+
+
