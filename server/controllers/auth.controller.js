@@ -71,13 +71,10 @@ const authController = {
 
         ///send register email
         await emailService.registerEmail(value.email, value.firstname, user);
-        //set access token
-        let token = await authService.genAuthToken(user);
-        //set access token to cookies
-        res.cookie("x-access-token", token).status(httpStatus.CREATED).send({
+
+        res.status(httpStatus.CREATED).send({
           user,
           defaultMenu: createDefaultMenu,
-          token,
         });
       }
     } catch (error) {

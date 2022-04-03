@@ -22,8 +22,13 @@ const deleteFoodItemSchema = Joi.object({
   foodItemId: Joi.objectId(),
 });
 
+const fetchFoodItemSchema = Joi.object({
+  menuId: Joi.objectId().required(),
+});
+
 module.exports = {
   foodItemSchema,
   updateFoodItemSchema,
   deleteFoodItemSchema,
+  fetchFoodItemSchema
 };

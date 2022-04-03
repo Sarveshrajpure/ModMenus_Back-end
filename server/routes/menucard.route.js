@@ -5,7 +5,7 @@ const auth = require("../middlewares/auth");
 
 //--------------------------------Category Apis---------------------------------
 
-///api/menucard/createCategories
+///api/menucard/createcategories
 router.post("/createcategory", auth(), menucardController.createCategories);
 
 ///api/menucard/updatecategories
@@ -14,10 +14,16 @@ router.patch("/updatecategory", auth(), menucardController.updateCategory);
 //api/menucard/deletecategory
 router.delete("/deletecategory", auth(), menucardController.deleteCategory);
 
+///api/menucard/getcategories
+router.get("/getcategories/:menuId", menucardController.getCategories);
+
 //--------------------------------Food item Apis---------------------------------
 
 ///api/menucard/createfoodItem
 router.post("/createfoodItem", auth(), menucardController.createFoodItems);
+
+///api/menucard/getfoodItem
+router.get("/getfoodItem/:categoryId", auth(), menucardController.getFoodItems);
 
 ///api/menucard/updatefoodItem
 router.patch("/updatefooditem", auth(), menucardController.updateFoodItem);

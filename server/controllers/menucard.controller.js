@@ -8,11 +8,13 @@ const {
   categorySchema,
   updateCategorySchema,
   deleteCategorySchema,
+  fetchCategorySchema,
 } = require("../helpers/categoryValidations.js");
 const {
   foodItemSchema,
   updateFoodItemSchema,
   deleteFoodItemSchema,
+  fetchFoodItemSchema,
 } = require("../helpers/foodItemValidations.js");
 const { ApiError } = require("../middlewares/apiError");
 const httpStatus = require("http-status");
@@ -60,6 +62,30 @@ const menucardController = {
 
       res.status(httpStatus.CREATED).send(foodItemCreated);
     } catch (error) {
+      next(error);
+    }
+  },
+
+  async getCategories(req, res, next) {
+    try {
+      let value = await fetchCategorySchema.validateAsync(req.params);
+      let categories = await categoryService.fetchCategoriesByMenuID(
+        value.menuId
+      );
+      res.status(httpStatus.OK).send(categories);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getFoodItems(req, res, next) {
+    try {
+      let value = await fetchFoodItemSchema.validateAsync(req.params);
+      let foodItemData = await foodItemService.fetchFoodItemsByCategoryId(
+        value.categoryId
+      );
+      res.status(httpStatus.OK).send(foodItemData);
+    } catch (err) {
       next(error);
     }
   },

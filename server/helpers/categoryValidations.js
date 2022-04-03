@@ -18,8 +18,13 @@ const deleteCategorySchema = Joi.object({
   categoryId: Joi.objectId().required(),
 });
 
+const fetchCategorySchema = Joi.object({
+  menuId: Joi.objectId().required(),
+});
+
 module.exports = {
   categorySchema,
   updateCategorySchema,
   deleteCategorySchema,
+  fetchCategorySchema,
 };
