@@ -2,6 +2,7 @@ const {
   categoryService,
   foodItemService,
   menuService,
+  cloudinaryservice,
 } = require("../services");
 const {
   categorySchema,
@@ -37,8 +38,25 @@ const menucardController = {
   async createFoodItems(req, res, next) {
     try {
       let value = await foodItemSchema.validateAsync(req.body);
+      let imageInBase64 = value.image;
+      let imgLink = "";
+      console.log(imageInBase64.length);
+      if (imageInBase64) {
+        console.log("in image upload");
+        let uploadImg = await cloudinaryservice.uploadFoodItemImgToCouldinary(
+          imageInBase64
+        );
 
-      let foodItemCreated = await foodItemService.BulkCreateFoodItem(value);
+        imgLink = uploadImg.secure_url;
+      }
+
+      let foodItemCreated = await foodItemService.CreateFoodItem(
+        value.name,
+        value.description,
+        value.categoryId,
+        value.price,
+        imgLink
+      );
 
       res.status(httpStatus.CREATED).send(foodItemCreated);
     } catch (error) {

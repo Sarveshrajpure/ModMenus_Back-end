@@ -21,4 +21,18 @@ const uploadQrToCouldinary = async (QrCode) => {
   }
 };
 
-module.exports = { uploadQrToCouldinary };
+const uploadFoodItemImgToCouldinary = async (fooditemImg) => {
+  try {
+    const uploadedResponse = await cloudinary.uploader.upload(fooditemImg, {
+      upload_preset: "ModMenus_Fooditem_imgs",
+    });
+
+    console.log(uploadedResponse);
+    return uploadedResponse;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+module.exports = { uploadQrToCouldinary, uploadFoodItemImgToCouldinary };

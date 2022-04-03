@@ -37,4 +37,6 @@ router.delete(
 ///api/menucard/getmenu/:menuReference
 router.get("/getmenu/:menuReference", menucardController.getmenucard);
 
+//router.get("getQrLink",menu)
+
 module.exports = router;

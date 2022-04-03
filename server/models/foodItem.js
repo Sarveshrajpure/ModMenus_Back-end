@@ -26,9 +26,9 @@ const foodItemSchema = mongoose.Schema(
       required: true,
       maxLength: 20,
     },
-    images: {
-      type: Array,
-      default: [],
+    image: {
+      type: String,
+      default: null,
     },
   },
   { timestamps: true }

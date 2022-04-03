@@ -2,9 +2,15 @@ const { FoodItem } = require("../models/foodItem");
 const ApiError = require("../middlewares/apiError");
 const httpStatus = require("http-status");
 
-const BulkCreateFoodItem = async (foodItemData) => {
+const CreateFoodItem = async (name, description, categoryId, price, image) => {
   try {
-    let foodItemsCreated = await FoodItem.create(foodItemData);
+    let foodItemsCreated = await FoodItem.create({
+      name,
+      description,
+      categoryId,
+      price,
+      image,
+    });
     return foodItemsCreated;
   } catch (error) {
     console.log(error);
@@ -56,7 +62,7 @@ const deleteAllFoodItems = async (categoryId) => {
 };
 
 module.exports = {
-  BulkCreateFoodItem,
+  CreateFoodItem,
   fetchFoodItemsByCategoryId,
   updateFoodItem,
   deleteSingleFoodItem,
