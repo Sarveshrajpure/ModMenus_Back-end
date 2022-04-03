@@ -1,10 +1,17 @@
-const { authService, emailService, menuService } = require("../services");
+const {
+  authService,
+  emailService,
+  menuService,
+  qrservice,
+  cloudinaryservice,
+} = require("../services");
 const { registerSchema, loginSchema } = require("../helpers/userValidations");
 const { ApiError } = require("../middlewares/apiError");
 const httpStatus = require("http-status");
 const { User } = require("../models/user");
 const ShortUniqueId = require("short-unique-id");
 const uid = new ShortUniqueId({ length: 6 });
+const CONSTANTS = require("../constants/constants");
 
 const authController = {
   async register(req, res, next) {
@@ -39,22 +46,33 @@ const authController = {
           value.phone
         );
 
-        //set access token
-        let token = await authService.genAuthToken(user);
-
         // create default menu for business
         let menuName = user.businessname + "_menu";
         let menuReference = uid();
+        let businessName = user.businessname;
 
         let createDefaultMenu = await menuService.createMenu(
           menuName,
           user.id,
-          menuReference
+          menuReference,
+          businessName
         );
+        //Create a QR code for menu
+        let menuLink = `${CONSTANTS.APP.Menu_Front_end_link}/menu/${createDefaultMenu.menuReference}`;
+        let QrCode = await qrservice.generateQr(menuLink);
+
+        //Upload qr to cloudinary
+
+        let uploadQr = await cloudinaryservice.uploadQrToCouldinary(QrCode);
+        //Update Qr link in menu
+        let menuId = createDefaultMenu._id;
+        let qrLink = uploadQr.secure_url;
+        let updateQrLink = await menuService.updateQrInMenu(qrLink, menuId);
 
         ///send register email
         await emailService.registerEmail(value.email, value.firstname, user);
-
+        //set access token
+        let token = await authService.genAuthToken(user);
         //set access token to cookies
         res.cookie("x-access-token", token).status(httpStatus.CREATED).send({
           user,

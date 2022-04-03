@@ -13,7 +13,6 @@ const guestController = {
       //validate guest register data using joi schema
       let value = await registerSchema.validateAsync(req.body);
 
-      console.log(value.businessId);
 
       if (value) {
         //check if phone is unique in mongo

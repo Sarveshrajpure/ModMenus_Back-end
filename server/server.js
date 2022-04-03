@@ -18,6 +18,10 @@ mongoose.connect(mongoUri, {
   useUnifiedTopology: true,
 });
 
+//config for img upload
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
 ///body parser
 app.use(express.json());
 

@@ -22,6 +22,17 @@ const menuSchema = mongoose.Schema(
       unique: true,
       maxLength: 100,
     },
+    businessName: {
+      type: String,
+      required: true,
+      unique: true,
+      maxLength: 100,
+    },
+    qrLink: {
+      type: String,
+      required: false,
+      unique: true,
+    },
   },
   { timestamps: true }
 );

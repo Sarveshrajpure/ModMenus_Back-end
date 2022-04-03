@@ -5,3 +5,5 @@ module.exports.menuService = require("./menu.service");
 module.exports.categoryService = require("./category.service");
 module.exports.foodItemService = require("./foodItem.service");
 module.exports.emailService = require("./email.service");
+module.exports.qrservice = require("./qr.service");
+module.exports.cloudinaryservice = require("./cloudinary.service");

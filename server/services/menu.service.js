@@ -2,9 +2,15 @@ const { Menu } = require("../models/menu");
 const ApiError = require("../middlewares/apiError");
 const httpStatus = require("http-status");
 
-const createMenu = async (name, businessId, menuReference) => {
+const createMenu = async (name, businessId, menuReference, businessName) => {
   try {
-    let menuCreated = new Menu({ name, businessId, menuReference });
+    console.log(businessName);
+    let menuCreated = new Menu({
+      name,
+      businessId,
+      menuReference,
+      businessName,
+    });
 
     await menuCreated.save();
 
@@ -32,4 +38,21 @@ const findMenuByReference = async (menuReference) => {
     throw error;
   }
 };
-module.exports = { createMenu, findDefaultMenu, findMenuByReference };
+
+const updateQrInMenu = async (qrLink, menuId) => {
+  try {
+    console.log(qrLink);
+    let updateQrLink = await Menu.findByIdAndUpdate(menuId, { qrLink: qrLink });
+    console.log(updateQrLink);
+    return updateQrLink;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+module.exports = {
+  createMenu,
+  findDefaultMenu,
+  findMenuByReference,
+  updateQrInMenu,
+};
