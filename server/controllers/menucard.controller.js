@@ -42,7 +42,7 @@ const menucardController = {
       let value = await foodItemSchema.validateAsync(req.body);
       let imageInBase64 = value.image;
       let imgLink = "";
-      console.log(imageInBase64.length);
+      //console.log(imageInBase64.length);
       if (imageInBase64) {
         console.log("in image upload");
         let uploadImg = await cloudinaryservice.uploadFoodItemImgToCouldinary(
@@ -85,7 +85,7 @@ const menucardController = {
         value.categoryId
       );
       res.status(httpStatus.OK).send(foodItemData);
-    } catch (err) {
+    } catch (error) {
       next(error);
     }
   },
