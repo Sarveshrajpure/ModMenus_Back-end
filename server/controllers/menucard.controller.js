@@ -41,10 +41,10 @@ const menucardController = {
     try {
       let value = await foodItemSchema.validateAsync(req.body);
       let imageInBase64 = value.image;
+      //console.log(imageInBase64);
       let imgLink = "";
       //console.log(imageInBase64.length);
       if (imageInBase64) {
-        console.log("in image upload");
         let uploadImg = await cloudinaryservice.uploadFoodItemImgToCouldinary(
           imageInBase64
         );
