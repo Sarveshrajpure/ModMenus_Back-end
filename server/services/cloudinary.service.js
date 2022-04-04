@@ -27,7 +27,7 @@ const uploadFoodItemImgToCouldinary = async (fooditemImg) => {
       upload_preset: "ModMenus_Fooditem_imgs",
     });
 
-    console.log(uploadedResponse);
+   // console.log(uploadedResponse);
     return uploadedResponse;
   } catch (error) {
     console.log(error);
