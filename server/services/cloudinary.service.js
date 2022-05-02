@@ -7,32 +7,24 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadQrToCouldinary = async (QrCode) => {
-  try {
-    const uploadedResponse = await cloudinary.uploader.upload(QrCode, {
-      upload_preset: "ModMenus_Qrs",
-    });
-
-    console.log(uploadedResponse);
-    return uploadedResponse;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
-
-const uploadFoodItemImgToCouldinary = async (fooditemImg) => {
+const uploadImgToCouldinary = async (fooditemImg, upload_folder) => {
   try {
     const uploadedResponse = await cloudinary.uploader.upload(fooditemImg, {
-      upload_preset: "ModMenus_Fooditem_imgs",
+      upload_preset: upload_folder,
     });
 
-   // console.log(uploadedResponse);
     return uploadedResponse;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
 
-module.exports = { uploadQrToCouldinary, uploadFoodItemImgToCouldinary };
+const deleteCloudinaryImg = async (public_id) => {
+  try {
+    const deleteImg = await cloudinary.uploader.destroy(public_id);
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { uploadImgToCouldinary, deleteCloudinaryImg };

@@ -34,6 +34,14 @@ const fetchCategoriesByMenuID = async (menuId) => {
     throw error;
   }
 };
+const fetchCategoriesByID = async (categoryId) => {
+  try {
+    let findCategoriesById = await Category.find({ _id: categoryId });
+    return findCategoriesById;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const deleteCategory = async (categoryId) => {
   try {
@@ -47,6 +55,7 @@ const deleteCategory = async (categoryId) => {
 module.exports = {
   createCategory,
   fetchCategoriesByMenuID,
+  fetchCategoriesByID,
   updateCategory,
   deleteCategory,
 };

@@ -12,10 +12,13 @@ router.post("/createcategory", auth(), menucardController.createCategories);
 router.patch("/updatecategory", auth(), menucardController.updateCategory);
 
 //api/menucard/deletecategory
-router.delete("/deletecategory", auth(), menucardController.deleteCategory);
+router.post("/deletecategory", auth(), menucardController.deleteCategory);
 
 ///api/menucard/getcategories
 router.get("/getcategories/:menuId", menucardController.getCategories);
+
+///api/menucard/getcategorybyid/:categoryId
+router.get("/getcategorybyid/:categoryId", menucardController.getCategoryById);
 
 //--------------------------------Food item Apis---------------------------------
 
@@ -26,17 +29,13 @@ router.post("/createfoodItem", auth(), menucardController.createFoodItems);
 router.get("/getfoodItem/:categoryId", auth(), menucardController.getFoodItems);
 
 ///api/menucard/updatefoodItem
-router.patch("/updatefooditem", auth(), menucardController.updateFoodItem);
+router.post("/updatefooditem", auth(), menucardController.updateFoodItem);
 
 ///api/menucard/deletefoodItems
-router.delete("/deletefooditem", auth(), menucardController.deleteFooditem);
+router.post("/deletefooditem", auth(), menucardController.deleteFooditem);
 
 ///api/menucard/deleteallfoodItems
-router.delete(
-  "/deleteallfooditem",
-  auth(),
-  menucardController.deleteAllFooditem
-);
+router.post("/deleteallfooditem", auth(), menucardController.deleteAllFooditem);
 
 //--------------------------------Menu Apis-----------------------------------------
 

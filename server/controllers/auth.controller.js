@@ -62,8 +62,11 @@ const authController = {
         let QrCode = await qrservice.generateQr(menuLink);
 
         //Upload qr to cloudinary
-
-        let uploadQr = await cloudinaryservice.uploadQrToCouldinary(QrCode);
+        let uploadFolder = "ModMenus_Qrs";
+        let uploadQr = await cloudinaryservice.uploadImgToCouldinary(
+          QrCode,
+          uploadFolder
+        );
         //Update Qr link in menu
         let menuId = createDefaultMenu._id;
         let qrLink = uploadQr.secure_url;

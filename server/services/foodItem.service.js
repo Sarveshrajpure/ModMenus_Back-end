@@ -1,8 +1,16 @@
 const { FoodItem } = require("../models/foodItem");
+const cloudinaryService = require("./cloudinary.service");
 const ApiError = require("../middlewares/apiError");
 const httpStatus = require("http-status");
 
-const CreateFoodItem = async (name, description, categoryId, price, image) => {
+const CreateFoodItem = async (
+  name,
+  description,
+  categoryId,
+  price,
+  image,
+  cloudinary_id
+) => {
   try {
     let foodItemsCreated = await FoodItem.create({
       name,
@@ -10,6 +18,7 @@ const CreateFoodItem = async (name, description, categoryId, price, image) => {
       categoryId,
       price,
       image,
+      cloudinary_id,
     });
     return foodItemsCreated;
   } catch (error) {
@@ -29,13 +38,68 @@ const fetchFoodItemsByCategoryId = async (categoryId) => {
   }
 };
 
-const updateFoodItem = async (name, description, fooItemId) => {
+const updateFoodItem = async (name, description, foodItemId, price, image) => {
   try {
-    let updatedFoodItem = await FoodItem.findByIdAndUpdate(fooItemId, {
-      name: name,
-      description: description,
-    });
-    return updatedFoodItem;
+    if (image) {
+      if (image.length > 0) {
+        let findFoodItemsByCategoryId = await FoodItem.findById({
+          _id: foodItemId,
+        });
+
+        let uploadFolder = "ModMenus_Fooditem_imgs";
+        let uploadNewImage = await cloudinaryService.uploadImgToCouldinary(
+          image,
+          uploadFolder
+        );
+
+        let imgUrl = uploadNewImage.secure_url;
+        let public_id = uploadNewImage.public_id;
+
+        let updatedFoodItem = await FoodItem.findByIdAndUpdate(foodItemId, {
+          name: name,
+          description: description,
+          price,
+          image: imgUrl,
+          cloudinary_id: public_id,
+        });
+
+        if (findFoodItemsByCategoryId.cloudinary_id) {
+          let deletePreviousImg = await cloudinaryService.deleteCloudinaryImg(
+            findFoodItemsByCategoryId.cloudinary_id
+          );
+        }
+
+        return updatedFoodItem;
+      }
+    } else {
+      if (image === null) {
+        let findFoodItemsByCategoryId = await FoodItem.findById({
+          _id: foodItemId,
+        });
+        let updatedFoodItem = await FoodItem.findByIdAndUpdate(foodItemId, {
+          name: name,
+          description: description,
+          price,
+          image: null,
+          cloudinary_id: null,
+        });
+
+        if (findFoodItemsByCategoryId.cloudinary_id) {
+          let deletePreviousImg = await cloudinaryService.deleteCloudinaryImg(
+            findFoodItemsByCategoryId.cloudinary_id
+          );
+        }
+
+        return updatedFoodItem;
+      }
+
+      let updatedFoodItem = await FoodItem.findByIdAndUpdate(foodItemId, {
+        name: name,
+        description: description,
+        price,
+      });
+      return updatedFoodItem;
+    }
   } catch (error) {
     throw error;
   }
