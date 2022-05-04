@@ -31,7 +31,10 @@ const createOrder = async (
 
 const findActiveOrdersByBusinessId = async (businessId) => {
   try {
-    let orders = await Order.find({ businessId: businessId, status: "placed" });
+    let orders = await Order.find({
+      businessId: businessId,
+      status: "placed",
+    }).sort({ createdAt: -1 });
     return orders;
   } catch (error) {
     throw error;
@@ -40,7 +43,7 @@ const findActiveOrdersByBusinessId = async (businessId) => {
 
 const findActiveOrdersByGuestId = async (guestId) => {
   try {
-    let orders = await Order.find(guestId);
+    let orders = await Order.find(guestId).sort({ createdAt: -1 });
     return orders;
   } catch (error) {
     throw error;
