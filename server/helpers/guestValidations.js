@@ -3,6 +3,7 @@ const CONSTANTS = require("../constants/constants");
 Joi.objectId = require("joi-objectid")(Joi);
 
 const phoneError = new Error("Enter a 10 digit valid Phone number");
+const tableError = "Should be a number other than zero";
 
 const registerSchema = Joi.object({
   email: Joi.string().email().max(225).required(),

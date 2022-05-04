@@ -95,7 +95,7 @@ const menucardController = {
     try {
       let menuCardData = [{ menuData: "", categoryAndFoodItemData: "" }];
 
-      //Finding menu by menyu reference
+      //Finding menu by menu reference
       let menuDetails = await menuService.findMenuByReference(
         req.params.menuReference
       );

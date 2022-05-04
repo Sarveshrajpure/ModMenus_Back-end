@@ -13,27 +13,66 @@ const guestController = {
       //validate guest register data using joi schema
       let value = await registerSchema.validateAsync(req.body);
 
-
       if (value) {
+        let guest = "";
         //check if phone is unique in mongo
-        if (await Guest.phoneTaken(value.email)) {
-          throw new ApiError(httpStatus.BAD_REQUEST, "Phone already exists");
+        if ((guest = await Guest.phoneTaken(value.phone, value.businessId))) {
+          console.log(guest);
+          res.status(httpStatus.OK).send({
+            guest,
+          });
         }
         //check if email is unique in mongo
-        if (await Guest.emailTaken(value.email)) {
-          throw new ApiError(httpStatus.BAD_REQUEST, "Email already exists");
+        else if (
+          (guest = await Guest.emailTaken(value.email, value.businessId))
+        ) {
+          res.status(httpStatus.OK).send({
+            guest,
+          });
+        } else {
+          //create new Guest in mongo
+          guest = await guestService.createGuest(
+            value.email,
+            value.name,
+            value.phone,
+            value.businessId
+          );
+
+          res.status(httpStatus.CREATED).send({
+            guest,
+          });
         }
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
 
-        //create new Guest in mongo
-        let guest = await guestService.createGuest(
-          value.email,
-          value.name,
-          value.phone,
-          value.businessId
-        );
+  async addToCart(req, res, next) {
+    try {
+      let value = req.body;
 
-        res.status(httpStatus.CREATED).send({
+      if (value) {
+        let guest = await guestService.putInCart(value.id, value.cartItems);
+
+        res.status(httpStatus.OK).send({
           guest,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async fetchCart(req, res, next) {
+    try {
+      let value = req.params;
+
+      if (value) {
+        let cart = await guestService.getCart(value.id);
+
+        res.status(httpStatus.OK).send({
+          cart,
         });
       }
     } catch (error) {

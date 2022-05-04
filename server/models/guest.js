@@ -33,18 +33,22 @@ const guestSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    cart: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );
 
-guestSchema.statics.phoneTaken = async function (phone) {
+guestSchema.statics.phoneTaken = async function (phone, businessId) {
   const user = await this.findOne({ phone });
-  return !!user;
+  return user;
 };
 
-guestSchema.statics.emailTaken = async function (email) {
+guestSchema.statics.emailTaken = async function (email, businessId) {
   const user = await this.findOne({ email });
-  return !!user;
+  return user;
 };
 
 const Guest = mongoose.model("Guest", guestSchema);
