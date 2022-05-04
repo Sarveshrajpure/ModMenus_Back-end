@@ -4,6 +4,7 @@ const userRoute = require("./user.route");
 const menucardRoute = require("./menucard.route");
 const guestRoute = require("./guest.route");
 const orderRoute = require("./order.route");
+const StatisticsRoute = require("./statistics.route");
 const router = express.Router();
 
 const routesIndex = [
@@ -26,6 +27,10 @@ const routesIndex = [
   {
     path: "/orders",
     route: orderRoute,
+  },
+  {
+    path: "/stats",
+    route: StatisticsRoute,
   },
 ];
 

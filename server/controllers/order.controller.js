@@ -55,9 +55,7 @@ const orderController = {
     try {
       let value = await ordersByGuestId.validateAsync(req.params);
 
-      let orders = await orderService.findActiveOrdersByGuestId(
-        value.businessId
-      );
+      let orders = await orderService.findActiveOrdersByGuestId(value.guestId);
       res.status(httpStatus.OK).send(orders);
     } catch (error) {
       next(error);
