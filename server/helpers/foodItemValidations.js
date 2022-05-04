@@ -19,7 +19,7 @@ const updateFoodItemSchema = Joi.object({
 });
 
 const deleteFoodItemSchema = Joi.object({
-  foodItemId: Joi.objectId(),
+  foodItemId: Joi.objectId().required(),
 });
 
 const fetchFoodItemSchema = Joi.object({

@@ -8,14 +8,57 @@ require("dotenv").config();
 const routes = require("./routes");
 const passport = require("passport");
 const { jwtStrategy } = require("./middlewares/passport");
-
 const { handleError, convertToApiError } = require("./middlewares/apiError");
+const server = require("http").createServer(app);
+const io = require("socket.io")(3001, {
+  cors: { origin: ["http://localhost:3000"] },
+});
+
+//Socket io connections
+
+io.of("/api/socket").on("connection", (socket) => {
+  console.log;
+  console.log("socket.io: User connected: ", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("socket.io: User disconnected: ", socket.id);
+  });
+});
 
 //mongodb
 const mongoUri = `mongodb+srv://${process.env.DB_ADMIN}:${process.env.DB_PASS}@${process.env.DB_HOST}?retryWrites=true&w=majority`;
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+});
+
+const connection = mongoose.connection;
+
+connection.once("open", () => {
+  console.log("Mongodb realtime connected");
+
+  console.log("Setting change streams");
+
+  const ordersChangeStream = connection.collection("orders").watch();
+
+  ordersChangeStream.on("change", (change) => {
+    switch (change.operationType) {
+      case "insert":
+        const order = {
+          _id: change.fullDocument._id,
+          businessId: change.fullDocument.businessId,
+          guestId: change.fullDocument.guestId,
+          guestName: change.fullDocument.guestName,
+          tableNumber: change.fullDocument.tableNumber,
+          items: change.fullDocument.items,
+          total: change.fullDocument.total,
+          status: change.fullDocument.status,
+        };
+        console.log(order);
+        io.of("/api/socket").emit("newOrder", order);
+        break;
+    }
+  });
 });
 
 //config for img upload
@@ -44,7 +87,6 @@ app.use(convertToApiError);
 app.use((err, req, res, next) => {
   handleError(err, res);
 });
-
 const port = process.env.PORT || 3002;
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);

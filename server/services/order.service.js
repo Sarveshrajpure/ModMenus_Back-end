@@ -29,6 +29,26 @@ const createOrder = async (
   }
 };
 
+const findActiveOrdersByBusinessId = async (businessId) => {
+  try {
+    let orders = await Order.find({ businessId: businessId, status: "placed" });
+    return orders;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const findActiveOrdersByGuestId = async (guestId) => {
+  try {
+    let orders = await Order.find(guestId);
+    return orders;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createOrder,
+  findActiveOrdersByBusinessId,
+  findActiveOrdersByGuestId,
 };
