@@ -6,7 +6,7 @@ const guestSchema = mongoose.Schema(
   {
     email: {
       type: String,
-      unique: true,
+
       trim: true,
       validate(value) {
         if (!validator.isEmail(value)) {
@@ -26,7 +26,6 @@ const guestSchema = mongoose.Schema(
       require: true,
       maxLength: 12,
       trim: true,
-      unique: true,
     },
     businessId: {
       type: mongoose.Schema.Types.ObjectId,

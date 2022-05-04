@@ -81,10 +81,41 @@ const phoneTaken = async (phone, businessId) => {
   return user;
 };
 
+const findGuestByBusinessIdPhone = async (businessId, guestPhone) => {
+  try {
+    console.log("in Phone Service");
+    let guest = await Guest.findOne({
+      businessId: businessId,
+      phone: guestPhone,
+    });
+    console.log(guest);
+    return guest;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+const findGuestByBusinessIdEmail = async (businessId, guestEmail) => {
+  try {
+    console.log("in Email Service");
+    let guest = await Guest.findOne({
+      businessId: businessId,
+      email: guestEmail,
+    });
+    console.log(guest);
+    return guest;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
   createGuest,
   getGuests,
   putInCart,
   getCart,
   phoneTaken,
+  findGuestByBusinessIdPhone,
+  findGuestByBusinessIdEmail,
 };

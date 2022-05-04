@@ -16,15 +16,22 @@ const guestController = {
       if (value) {
         let guest = "";
         //check if phone is unique in mongo
-        if ((guest = await Guest.phoneTaken(value.phone, value.businessId))) {
-          console.log(guest);
+        if (
+          (guest = await guestService.findGuestByBusinessIdPhone(
+            value.businessId,
+            value.phone
+          ))
+        ) {
           res.status(httpStatus.OK).send({
             guest,
           });
         }
         //check if email is unique in mongo
         else if (
-          (guest = await Guest.emailTaken(value.email, value.businessId))
+          (guest = await guestService.findGuestByBusinessIdEmail(
+            value.businessId,
+            value.email
+          ))
         ) {
           res.status(httpStatus.OK).send({
             guest,
