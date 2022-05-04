@@ -9,6 +9,7 @@ const {
   updateCategorySchema,
   deleteCategorySchema,
   fetchCategorySchema,
+  fetchCategoryByIdSchema,
 } = require("../helpers/categoryValidations.js");
 const {
   foodItemSchema,
@@ -41,15 +42,20 @@ const menucardController = {
     try {
       let value = await foodItemSchema.validateAsync(req.body);
       let imageInBase64 = value.image;
+      //console.log(imageInBase64);
       let imgLink = "";
+      let cloudinary_id = "";
       //console.log(imageInBase64.length);
       if (imageInBase64) {
-        console.log("in image upload");
-        let uploadImg = await cloudinaryservice.uploadFoodItemImgToCouldinary(
-          imageInBase64
+        let uploadFolder = "ModMenus_Fooditem_imgs";
+
+        let uploadImg = await cloudinaryservice.uploadImgToCouldinary(
+          imageInBase64,
+          uploadFolder
         );
 
         imgLink = uploadImg.secure_url;
+        cloudinary_id = uploadImg.public_id;
       }
 
       let foodItemCreated = await foodItemService.CreateFoodItem(
@@ -57,7 +63,8 @@ const menucardController = {
         value.description,
         value.categoryId,
         value.price,
-        imgLink
+        imgLink,
+        cloudinary_id
       );
 
       res.status(httpStatus.CREATED).send(foodItemCreated);
@@ -73,6 +80,19 @@ const menucardController = {
         value.menuId
       );
       res.status(httpStatus.OK).send(categories);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getCategoryById(req, res, next) {
+    try {
+      let value = await fetchCategoryByIdSchema.validateAsync(req.params);
+
+      let category = await categoryService.fetchCategoriesByID(
+        value.categoryId
+      );
+
+      res.status(httpStatus.OK).send(category);
     } catch (error) {
       next(error);
     }
@@ -156,7 +176,9 @@ const menucardController = {
       let updateFoodItem = await foodItemService.updateFoodItem(
         value.name,
         value.description,
-        value.foodItemId
+        value.foodItemId,
+        value.price,
+        value.image
       );
 
       if (updateFoodItem) {
@@ -182,16 +204,19 @@ const menucardController = {
         res.status(httpStatus.METHOD_NOT_ALLOWED).send({
           message: `Category cannot be delete as it containes ${foodItemsCount} food items,consider deleting these food items before deleting category.`,
         });
-      }
-
-      let deleteCategory = await categoryService.deleteCategory(
-        value.categoryId
-      );
-
-      if (deleteCategory) {
-        res
-          .status(httpStatus.OK)
-          .send({ message: "Category delete sucessfully!" });
+      } else {
+        let deleteCategory = await categoryService.deleteCategory(
+          value.categoryId
+        );
+        if (deleteCategory.deletedCount > 0) {
+          res
+            .status(httpStatus.OK)
+            .send({ message: "Category delete sucessfully!" });
+        } else {
+          res
+            .status(httpStatus.OK)
+            .send({ message: "Category does not exist" });
+        }
       }
     } catch (error) {
       next(error);

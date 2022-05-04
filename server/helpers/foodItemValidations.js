@@ -15,7 +15,7 @@ const updateFoodItemSchema = Joi.object({
   description: Joi.string().max(225).allow(null, ""),
   price: Joi.string().max(20).required(),
   foodItemId: Joi.objectId().required(),
-  images: Joi.string(),
+  image: Joi.string().allow(null),
 });
 
 const deleteFoodItemSchema = Joi.object({
