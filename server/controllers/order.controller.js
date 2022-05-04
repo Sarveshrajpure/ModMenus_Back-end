@@ -41,7 +41,7 @@ const orderController = {
 
   async getActiveOrdersByBusinessId(req, res, next) {
     try {
-      let value = await ordersByBusinessId.validateAsync(req.body);
+      let value = await ordersByBusinessId.validateAsync(req.params);
 
       let orders = await orderService.findActiveOrdersByBusinessId(
         value.businessId
@@ -54,7 +54,7 @@ const orderController = {
 
   async getActiveOrdersByGuestId(req, res, next) {
     try {
-      let value = await ordersByGuestId.validateAsync(req.body);
+      let value = await ordersByGuestId.validateAsync(req.params);
 
       let orders = await orderService.findActiveOrdersByGuestId(
         value.businessId

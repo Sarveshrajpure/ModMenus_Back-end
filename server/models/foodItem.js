@@ -21,6 +21,11 @@ const foodItemSchema = mongoose.Schema(
       ref: "Category",
       required: true,
     },
+    menuId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Menu",
+      required: true,
+    },
     price: {
       type: String,
       required: true,

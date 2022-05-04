@@ -38,14 +38,14 @@ const menucardController = {
       next(error);
     }
   },
+
   async createFoodItems(req, res, next) {
     try {
       let value = await foodItemSchema.validateAsync(req.body);
       let imageInBase64 = value.image;
-      //console.log(imageInBase64);
       let imgLink = "";
       let cloudinary_id = "";
-      //console.log(imageInBase64.length);
+
       if (imageInBase64) {
         let uploadFolder = "ModMenus_Fooditem_imgs";
 
@@ -57,11 +57,25 @@ const menucardController = {
         imgLink = uploadImg.secure_url;
         cloudinary_id = uploadImg.public_id;
       }
+      let nameInLowerCase = value.name.toLowerCase();
+
+      let checkName = await foodItemService.fetchFoodItemsByMenuIdAndName(
+        value.menuId,
+        nameInLowerCase
+      );
+
+      if (checkName.length > 0) {
+        throw new ApiError(
+          httpStatus.BAD_REQUEST,
+          `${value.name} already exists in the menu`
+        );
+      }
 
       let foodItemCreated = await foodItemService.CreateFoodItem(
-        value.name,
+        nameInLowerCase,
         value.description,
         value.categoryId,
+        value.menuId,
         value.price,
         imgLink,
         cloudinary_id

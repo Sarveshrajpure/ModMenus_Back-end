@@ -7,6 +7,7 @@ const CreateFoodItem = async (
   name,
   description,
   categoryId,
+  menuId,
   price,
   image,
   cloudinary_id
@@ -16,6 +17,7 @@ const CreateFoodItem = async (
       name,
       description,
       categoryId,
+      menuId,
       price,
       image,
       cloudinary_id,
@@ -31,6 +33,18 @@ const fetchFoodItemsByCategoryId = async (categoryId) => {
   try {
     let findFoodItemsByCategoryId = await FoodItem.find({
       categoryId: categoryId,
+    });
+    return findFoodItemsByCategoryId;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const fetchFoodItemsByMenuIdAndName = async (menuId, name) => {
+  try {
+    let findFoodItemsByCategoryId = await FoodItem.find({
+      menuId: menuId,
+      name: name,
     });
     return findFoodItemsByCategoryId;
   } catch (error) {
@@ -128,6 +142,7 @@ const deleteAllFoodItems = async (categoryId) => {
 module.exports = {
   CreateFoodItem,
   fetchFoodItemsByCategoryId,
+  fetchFoodItemsByMenuIdAndName,
   updateFoodItem,
   deleteSingleFoodItem,
   deleteAllFoodItems,

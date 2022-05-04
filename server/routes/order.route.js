@@ -6,10 +6,13 @@ const auth = require("../middlewares/auth");
 //-------------------------order routes------------------------------------------------
 
 router.get(
-  "/findorderbybusinessid",
+  "/findorderbybusinessid/:businessId",
   orderController.getActiveOrdersByBusinessId
 );
 
-router.get("/findorderbyguestid", orderController.getActiveOrdersByGuestId);
+router.get(
+  "/findorderbyguestid/:guestId",
+  orderController.getActiveOrdersByGuestId
+);
 
 module.exports = router;

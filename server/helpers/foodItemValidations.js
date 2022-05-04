@@ -6,6 +6,7 @@ const foodItemSchema = Joi.object({
   name: Joi.string().min(3).max(225).required(),
   description: Joi.string().min(3).max(225).allow(null, ""),
   categoryId: Joi.objectId().required(),
+  menuId: Joi.objectId().required(),
   price: Joi.string().max(20).required(),
   image: Joi.string().allow(null, ""),
 });
