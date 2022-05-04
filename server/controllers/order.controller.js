@@ -30,7 +30,6 @@ const orderController = {
 
           res.status(httpStatus.CREATED).send({
             order,
-            guest,
           });
         }
       }

@@ -13,8 +13,7 @@ router.post("/addToCart", guestController.addToCart);
 ///api/guest/fetchCart
 router.get("/fetchCart/:id", guestController.fetchCart);
 
-///api/guest/placeOrder
-router.post("/placeOrder", orderController.placeOrder);
+
 
 ///api/guest/fetchGuests
 router.get("/fetchGuests", auth(), guestController.fetchGuests);
