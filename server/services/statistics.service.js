@@ -25,7 +25,7 @@ const findOrdersStatsByBusinessId = async (businessId) => {
 
     let ordersServed = await Order.find({
       businessId: businessId,
-      status: "placed",
+      status: "served",
     }).count();
 
     let orders = await Order.find({

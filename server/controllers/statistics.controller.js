@@ -17,13 +17,7 @@ const statisticsController = {
           value.businessId
         );
 
-        let statics = {
-          uniqueCust,
-          orderStats,
-        };
-        console.log(statics);
-
-        res.status(httpStatus.OK).send({ statics });
+        res.status(httpStatus.OK).send({ uniqueCust, orderStats });
       }
     } catch (error) {
       next(error);

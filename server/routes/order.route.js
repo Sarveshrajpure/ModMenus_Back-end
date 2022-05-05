@@ -20,4 +20,7 @@ router.get(
   orderController.getActiveOrdersByGuestId
 );
 
+///api/orders/updateorderstatus
+router.post("/updateorderstatus", auth(), orderController.updateOrderStatus);
+
 module.exports = router;

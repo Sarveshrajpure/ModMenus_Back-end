@@ -61,6 +61,20 @@ const orderController = {
       next(error);
     }
   },
+  async updateOrderStatus(req, res, next) {
+    try {
+      let values = req.body;
+      let orderUpdate = await orderService.updateOrderStatus(values.orderId);
+      console.log(orderUpdate);
+      if (orderUpdate) {
+        res
+          .status(httpStatus.OK)
+          .send({ message: "order status updated successfully!" });
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = orderController;

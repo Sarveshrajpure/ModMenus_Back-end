@@ -52,8 +52,19 @@ const findActiveOrdersByGuestId = async (guestId) => {
   }
 };
 
+const updateOrderStatus = async (orderId) => {
+  try {
+    let orders = await Order.findOneAndUpdate(
+      { _id: orderId },
+      { $set: { status: "served" } }
+    );
+    return orders;
+  } catch (error) {}
+};
+
 module.exports = {
   createOrder,
   findActiveOrdersByBusinessId,
   findActiveOrdersByGuestId,
+  updateOrderStatus,
 };
