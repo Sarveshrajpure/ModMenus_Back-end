@@ -4,14 +4,14 @@ const { ApiError } = require("../middlewares/apiError");
 
 const createGuest = async (email, name, phone, businessId) => {
   try {
-    if (await Guest.phoneTaken(phone)) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "Phone already exists");
-    }
+    // if (await Guest.phoneTaken(phone)) {
+    //   throw new ApiError(httpStatus.BAD_REQUEST, "Phone already exists");
+    // }
 
-    if (await Guest.emailTaken(email)) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "Email already exists");
-    }
-
+    // if (await Guest.emailTaken(email)) {
+    //   throw new ApiError(httpStatus.BAD_REQUEST, "Email already exists");
+    // }
+    console.log("in create guest service");
     const guest = new Guest({
       email,
       name,
@@ -45,7 +45,77 @@ const getGuests = async (businessId) => {
   }
 };
 
+const putInCart = async (guestId, items) => {
+  try {
+    let updatedcart = await Guest.findByIdAndUpdate(guestId, {
+      cart: items,
+    });
+    return updatedcart;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getCart = async (guestId, items) => {
+  try {
+    let guestCart = await Guest.findById(guestId);
+    return guestCart.cart;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const phoneTaken = async (phone, businessId) => {
+  console.log("in phone compare");
+  const user = await Guest.find({
+    $and: [
+      {
+        businessId: { $eq: businessId },
+      },
+      {
+        phone: { $eq: phone },
+      },
+    ],
+  });
+  console.log(user);
+  return user;
+};
+
+const findGuestByBusinessIdPhone = async (businessId, guestPhone) => {
+  try {
+    console.log("in Phone Service");
+    let guest = await Guest.findOne({
+      businessId: businessId,
+      phone: guestPhone,
+    });
+    console.log(guest);
+    return guest;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+const findGuestByBusinessIdEmail = async (businessId, guestEmail) => {
+  try {
+    console.log("in Email Service");
+    let guest = await Guest.findOne({
+      businessId: businessId,
+      email: guestEmail,
+    });
+    console.log(guest);
+    return guest;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
   createGuest,
   getGuests,
+  putInCart,
+  getCart,
+  phoneTaken,
+  findGuestByBusinessIdPhone,
+  findGuestByBusinessIdEmail,
 };

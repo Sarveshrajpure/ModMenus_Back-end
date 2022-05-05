@@ -2,16 +2,20 @@ const {
   categoryService,
   foodItemService,
   menuService,
+  cloudinaryservice,
 } = require("../services");
 const {
   categorySchema,
   updateCategorySchema,
   deleteCategorySchema,
+  fetchCategorySchema,
+  fetchCategoryByIdSchema,
 } = require("../helpers/categoryValidations.js");
 const {
   foodItemSchema,
   updateFoodItemSchema,
   deleteFoodItemSchema,
+  fetchFoodItemSchema,
 } = require("../helpers/foodItemValidations.js");
 const { ApiError } = require("../middlewares/apiError");
 const httpStatus = require("http-status");
@@ -34,13 +38,87 @@ const menucardController = {
       next(error);
     }
   },
+
   async createFoodItems(req, res, next) {
     try {
       let value = await foodItemSchema.validateAsync(req.body);
+      let imageInBase64 = value.image;
+      let imgLink = "";
+      let cloudinary_id = "";
 
-      let foodItemCreated = await foodItemService.BulkCreateFoodItem(value);
+      if (imageInBase64) {
+        let uploadFolder = "ModMenus_Fooditem_imgs";
+
+        let uploadImg = await cloudinaryservice.uploadImgToCouldinary(
+          imageInBase64,
+          uploadFolder
+        );
+
+        imgLink = uploadImg.secure_url;
+        cloudinary_id = uploadImg.public_id;
+      }
+      let nameInLowerCase = value.name.toLowerCase();
+
+      let checkName = await foodItemService.fetchFoodItemsByMenuIdAndName(
+        value.menuId,
+        nameInLowerCase
+      );
+
+      if (checkName.length > 0) {
+        throw new ApiError(
+          httpStatus.BAD_REQUEST,
+          `${value.name} already exists in the menu`
+        );
+      }
+
+      let foodItemCreated = await foodItemService.CreateFoodItem(
+        nameInLowerCase,
+        value.description,
+        value.categoryId,
+        value.menuId,
+        value.price,
+        imgLink,
+        cloudinary_id
+      );
 
       res.status(httpStatus.CREATED).send(foodItemCreated);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getCategories(req, res, next) {
+    try {
+      let value = await fetchCategorySchema.validateAsync(req.params);
+      let categories = await categoryService.fetchCategoriesByMenuID(
+        value.menuId
+      );
+      res.status(httpStatus.OK).send(categories);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getCategoryById(req, res, next) {
+    try {
+      let value = await fetchCategoryByIdSchema.validateAsync(req.params);
+
+      let category = await categoryService.fetchCategoriesByID(
+        value.categoryId
+      );
+
+      res.status(httpStatus.OK).send(category);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getFoodItems(req, res, next) {
+    try {
+      let value = await fetchFoodItemSchema.validateAsync(req.params);
+      let foodItemData = await foodItemService.fetchFoodItemsByCategoryId(
+        value.categoryId
+      );
+      res.status(httpStatus.OK).send(foodItemData);
     } catch (error) {
       next(error);
     }
@@ -51,7 +129,7 @@ const menucardController = {
     try {
       let menuCardData = [{ menuData: "", categoryAndFoodItemData: "" }];
 
-      //Finding menu by menyu reference
+      //Finding menu by menu reference
       let menuDetails = await menuService.findMenuByReference(
         req.params.menuReference
       );
@@ -112,7 +190,9 @@ const menucardController = {
       let updateFoodItem = await foodItemService.updateFoodItem(
         value.name,
         value.description,
-        value.foodItemId
+        value.foodItemId,
+        value.price,
+        value.image
       );
 
       if (updateFoodItem) {
@@ -138,16 +218,19 @@ const menucardController = {
         res.status(httpStatus.METHOD_NOT_ALLOWED).send({
           message: `Category cannot be delete as it containes ${foodItemsCount} food items,consider deleting these food items before deleting category.`,
         });
-      }
-
-      let deleteCategory = await categoryService.deleteCategory(
-        value.categoryId
-      );
-
-      if (deleteCategory) {
-        res
-          .status(httpStatus.OK)
-          .send({ message: "Category delete sucessfully!" });
+      } else {
+        let deleteCategory = await categoryService.deleteCategory(
+          value.categoryId
+        );
+        if (deleteCategory.deletedCount > 0) {
+          res
+            .status(httpStatus.OK)
+            .send({ message: "Category delete sucessfully!" });
+        } else {
+          res
+            .status(httpStatus.OK)
+            .send({ message: "Category does not exist" });
+        }
       }
     } catch (error) {
       next(error);

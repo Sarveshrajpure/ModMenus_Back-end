@@ -13,7 +13,7 @@ const categorySchema = mongoose.Schema(
     time: {
       type: String,
       required: false,
-      maxLength: 50,
+      maxLength: 10,
     },
 
     menuId: {

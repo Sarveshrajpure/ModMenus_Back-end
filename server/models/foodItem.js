@@ -1,29 +1,47 @@
+const { string } = require("@hapi/joi");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const foodItemSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    maxLength: 100,
-    trim: true,
-  },
-  description: {
-    type: String,
-    required: false,
-    maxLength: 250,
-  },
+const foodItemSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      maxLength: 100,
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: false,
+      maxLength: 250,
+    },
 
-  categoryId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
-    required: true,
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+    menuId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Menu",
+      required: true,
+    },
+    price: {
+      type: String,
+      required: true,
+      maxLength: 20,
+    },
+    image: {
+      type: String,
+      default: null,
+    },
+    cloudinary_id: {
+      type: String,
+      default: null,
+    },
   },
-  images: {
-    type: Array,
-    default: [],
-  },
-},{timestamps:true});
+  { timestamps: true }
+);
 
 const FoodItem = mongoose.model("FoodItem", foodItemSchema);
 
