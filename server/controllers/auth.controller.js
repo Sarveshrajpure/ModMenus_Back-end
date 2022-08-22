@@ -100,11 +100,14 @@ const authController = {
         let menuInfo = await menuService.findDefaultMenu(user.id);
 
         //set access token to cookies
-        res.cookie("x-access-token", token).status(httpStatus.CREATED).send({
-          user,
-          menuInfo,
-          token,
-        });
+        res
+          .cookie("modm-x-access-token", token)
+          .status(httpStatus.CREATED)
+          .send({
+            user,
+            menuInfo,
+            token,
+          });
       }
     } catch (error) {
       next(error);
