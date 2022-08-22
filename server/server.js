@@ -9,15 +9,15 @@ const routes = require("./routes");
 const passport = require("passport");
 const { jwtStrategy } = require("./middlewares/passport");
 const { handleError, convertToApiError } = require("./middlewares/apiError");
-const server = require("http").createServer(app);
-const io = require("socket.io")(3001, {
-  cors: { origin: ["http://localhost:3000"] },
-});
+
+//Socket io
+const http = require("http");
+const server = http.createServer(app);
+const io = require("socket.io")(server);
 
 //Socket io connections
 
-io.of("/api/socket").on("connection", (socket) => {
-  console.log;
+io.on("connection", (socket) => {
   console.log("socket.io: User connected: ", socket.id);
 
   socket.on("disconnect", () => {
@@ -88,6 +88,6 @@ app.use((err, req, res, next) => {
   handleError(err, res);
 });
 const port = process.env.PORT || 3002;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });
